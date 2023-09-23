@@ -7,4 +7,5 @@ def about(request):
     return render(request, 'website/about.html')
 
 def contact(request):
+    # print ('Contact')
     return render(request, 'website/contact.html')

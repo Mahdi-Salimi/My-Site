@@ -125,7 +125,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 STATICFILES_DIRS = [
     BASE_DIR / "statics",
-    "/var/www/static/",
+    # "/var/www/static/",
 ]
 
 # Default primary key field type
