@@ -1,14 +1,19 @@
 from django.shortcuts import render
-from .models import Post
+from .models import Post, Comment
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
+from blog.forms import CommentForm
+from django.contrib import messages
 
-def blog_home(request,cat_name=None, author_username=None):
+
+def blog_home(request,cat_name=None, author_username=None, tag_name=None):
     posts = Post.objects.all()
     if cat_name:
         posts = posts.filter(category__name=cat_name)
     if author_username :
         posts = posts.filter(author__username=author_username)
+    if tag_name :
+        posts = posts.filter(tag__name=tag_name)
         
     posts = Paginator(posts, 2)
     try:
@@ -24,8 +29,20 @@ def blog_home(request,cat_name=None, author_username=None):
 
 def blog_single(request,pid):
     # post = Post.objects.filter(pk = pid)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.add_message(request,messages.SUCCESS,'Your comment submitted successfully')
+        else:
+            messages.add_message(request,messages.ERROR,'Your comment submitted successfully')
+            
     post = get_object_or_404(Post, pk=pid , status=1)
-    context = {'post': post}
+    post.counted_views = post.counted_views + 1
+    post.save()
+    comments = Comment.objects.filter(post = post.id, approved=True)
+    form = CommentForm()
+    context = {'post': post, 'comments': comments, 'form': form}
     return render(request, 'blog/blog-single.html', context) 
 
 def blog_search(request):

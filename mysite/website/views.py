@@ -14,9 +14,9 @@ def contact(request):
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
-            unknown_name = form.data.copy()
-            unknown_name['name'] = 'unknown'
-            form = ContactForm(unknown_name)
+            # unknown_name = form.data.copy()
+            # unknown_name['name'] = 'unknown'
+            # form = ContactForm(unknown_name)
             form.save()
             messages.add_message(request,messages.SUCCESS,'Your ticket submitted successfully')
         else:
