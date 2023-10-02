@@ -4,6 +4,9 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
 from blog.forms import CommentForm
 from django.contrib import messages
+from django.shortcuts import redirect
+from django.urls import reverse 
+from django.http import HttpResponseRedirect
 
 
 def blog_home(request,cat_name=None, author_username=None, tag_name=None):
@@ -40,10 +43,14 @@ def blog_single(request,pid):
     post = get_object_or_404(Post, pk=pid , status=1)
     post.counted_views = post.counted_views + 1
     post.save()
-    comments = Comment.objects.filter(post = post.id, approved=True)
-    form = CommentForm()
-    context = {'post': post, 'comments': comments, 'form': form}
-    return render(request, 'blog/blog-single.html', context) 
+    
+    if not post.login_require:
+        comments = Comment.objects.filter(post = post.id, approved=True)
+        form = CommentForm()
+        context = {'post': post, 'comments': comments, 'form': form}
+        return render(request, 'blog/blog-single.html', context) 
+    else:
+        return HttpResponseRedirect(reverse('accounts:login'))
 
 def blog_search(request):
     posts = Post.objects.all()

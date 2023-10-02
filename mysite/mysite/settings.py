@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # During development only
 
 # Application definition
 
@@ -44,10 +46,13 @@ INSTALLED_APPS = [
     'captcha',
     'website',
     'blog',
+    'accounts',
     'robots',
     'debug_toolbar', 
     'django_extensions',
     'taggit',
+    # 'crispy_forms',
+    # 'crispy_bootstrap4',
 ]
 
 #sites framework
@@ -158,3 +163,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 INTERNAL_IPS =[
     '127.0.0.1',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
